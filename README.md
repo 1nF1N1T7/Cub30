@@ -6,5 +6,5 @@ Project N°0
 * Measure distance()
 * Set alarm() "in minutes"
 
-![plot](image/IMG_2725.gif)
+![plot](img/IMG_2725.gif)
 
