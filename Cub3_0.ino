@@ -95,7 +95,7 @@ void alarm() {
         if (et <= 0) {
           digitalWrite(A3, HIGH);
           digitalWrite(A4, LOW);
-          SHOW(2, 1, 0, 15, "Times UP!!");
+          SHOW(2, 1, 0, 15, "Time's UP!!!");
           delay(3000);
           digitalWrite(A3, LOW);
           e = 0;
