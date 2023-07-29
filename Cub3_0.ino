@@ -8,8 +8,7 @@ dht DHT;
 Adafruit_SSD1306 display(128, 32, &Wire, -1);
 
 
-void setup() {
-  Serial.begin(9600);
+void setup(){
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // Address 0x3D for 128x64
   pinMode(4, OUTPUT); //5v
   pinMode(5, OUTPUT); //GND
@@ -93,7 +92,7 @@ void alarm() {
       while (1) {
         int cm = millis() / 1000;
         int et = m * 60 - cm;
-        if (et == 0) {
+        if (et <= 0) {
           digitalWrite(A3, HIGH);
           digitalWrite(A4, LOW);
           SHOW(2, 1, 0, 15, "Times UP!!");
@@ -139,6 +138,6 @@ void loop() {
     buttonPressed = 0;
   }
 
-  delay(1000);
+  delay(500);
 
 }
