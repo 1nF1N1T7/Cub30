@@ -8,16 +8,26 @@ dht DHT;
 Adafruit_SSD1306 display(128, 32, &Wire, -1);
 
 
-void setup(){
+void setup() {
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // Address 0x3D for 128x64
+  //U.S
   pinMode(4, OUTPUT); //5v
   pinMode(5, OUTPUT); //GND
-  pinMode(12, OUTPUT); //GND
   pinMode(6, OUTPUT); //Trig
   pinMode(7, INPUT);  //Echo
+
+ //Laser
   pinMode(11, OUTPUT); //5v
+
+  //Button
+  pinMode(12, OUTPUT); //GND
+
+  //potentiometer
+
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
+
+  //BUZZER
   pinMode(A3, OUTPUT); //5v
   pinMode(A4, OUTPUT); //GND
 
@@ -43,11 +53,8 @@ void temperature() {
   int chk = DHT.read11(8);
 
   // DISPLAY DATA
-  String h = "Humidity: " + String(DHT.humidity) + " %";
-  SHOW(1, 1, 0, 10, h);
-  //Serial.println(DHT.temperature);
-  String t = "Temperature: " + String(DHT.temperature) + " C";
-  SHOW(1, 0, 0, 25, t);
+  String state = "Humidity: " + String(DHT.humidity) + " %\n\n"+ "Temperature: " + String(DHT.temperature) + " C"; 
+  SHOW(1, 1, 0, 0, state);
 }
 
 
@@ -73,15 +80,13 @@ void distance() {
   String distance = String(d) + "cm";
 
   SHOW(2, 1, 0, 15, String(distance));
-  digitalWrite(11, LOW); //disable 5v
+  digitalWrite(11, LOW); //disable 5v Laser
 }
 
 
 void alarm() {
   SHOW(2, 1, 0, 15, "ALARM!");
   delay(2000);
-  digitalWrite(9, LOW);
-  digitalWrite(10, HIGH);
   int e = 1;
   while (e) {
     int button = analogRead(A5);
@@ -111,33 +116,22 @@ void alarm() {
 
 
 void loop() {
-  //BUTTON
-  int buttonStatus = analogRead(A5);
+  //potentiometer
+  digitalWrite(9, LOW);
+  digitalWrite(10, HIGH);
+  int potentiometerStatus = analogRead(A1);
 
-  static int buttonPressed = 0;
 
-  digitalWrite(12, LOW); //Enable GND
+  //  digitalWrite(12, LOW); //Enable GND
 
-  //isButton Pressed?
-  if (buttonStatus == 0 && buttonPressed == 0) {
-    buttonPressed = 1;
-  } else if (buttonStatus == 0 && buttonPressed == 1) {
-    buttonPressed = 2;
-  } else if (buttonStatus == 0 && buttonPressed == 2) {
-    buttonPressed = 0;
-  }
-
-  if (buttonPressed == 0) {
+  //IsPotentiometer turned?
+  if (potentiometerStatus < 341) {
     temperature();
-  }
-  if (buttonPressed == 1) {
+  } else if (potentiometerStatus > 341 && potentiometerStatus < 682) {
     distance();
-  }
-  if (buttonPressed == 2) {
+  } else if (potentiometerStatus > 682 && potentiometerStatus < 1023) {
     alarm();
-    buttonPressed = 0;
   }
 
-  delay(500);
 
 }
